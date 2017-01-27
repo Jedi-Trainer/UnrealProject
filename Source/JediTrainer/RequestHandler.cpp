@@ -22,12 +22,13 @@ ARequestHandler::ARequestHandler(const class FObjectInitializer& ObjectInitializ
 // Called when the game starts or when spawned
 void ARequestHandler::BeginPlay()
 {
-	myHttpCall();
+	sendScore();	
 	Super::BeginPlay();
 
 }
 
-void ARequestHandler::myHttpCall() {
+//This will actually send the score up to our database
+void ARequestHandler::sendScore() {
 	//Create the JSON object
 	TSharedPtr<FJsonObject> json = MakeShareable(new FJsonObject);
 	json->SetStringField("id", "54");
@@ -53,9 +54,15 @@ void ARequestHandler::myHttpCall() {
 
 }
 
+
 void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
+	//Use bWasSuccessful in order to check if the request went through to the server.
+	//If it did, the user should be connected to the Internet.
+	//If not, then something must be wrong. 
+	//We could do a whole lot better, as something could go wrong that doesn't involve the Internet...
 
 }
+
 
 // Called every frame
 void ARequestHandler::Tick(float DeltaTime)

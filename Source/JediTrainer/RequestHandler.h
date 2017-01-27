@@ -39,7 +39,7 @@ public:
 
 	//The actual HTTP call 
 	UFUNCTION()
-		void myHttpCall();
+		void sendScore();
 
 	//Assign this function to call when the request processes successfully
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);

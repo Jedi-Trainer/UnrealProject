@@ -1,0 +1,8 @@
+Difficulty settings
+	Projectile 
+		Speed
+		Size
+	Droid
+		Distance
+		Firing Rate
+		Movement Speed
