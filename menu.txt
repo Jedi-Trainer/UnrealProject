@@ -1,0 +1,17 @@
+Main menu options:
+	Scores
+	Starting difficulty level
+		* Points per block is a function of difficulty level.
+	Sound on / off
+	Change map / location
+	Lightsaber color - preview 
+	Number of droids
+		* Droid reference should be linked list
+	
+Pause menu:
+	Resume
+	Restart
+	Scores
+	Settings?
+	Main menu
+	
