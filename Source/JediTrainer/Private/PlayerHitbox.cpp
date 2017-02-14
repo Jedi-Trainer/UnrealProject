@@ -39,6 +39,12 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	// Update the alpha value of the UI Hit Display material. This is so it gradually fades out after you are hit.
+	if (uIHitAlphaVal > 0) {
+		uIHitAlphaVal -= 0.001;
+	}
+	hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);;
+
 	// ...
 }
 
@@ -47,15 +53,15 @@ void UPlayerHitbox::initHitSphere() {
 	redSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HitSphere"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("Material'/Game/Materials/UI_Hurt.UI_Hurt'"));
+	
 	if (SphereVisualAsset.Succeeded() && MaterialAsset.Succeeded())
 	{
+		// Store the material in a dynamic material instance so that we can update the alpha value
+		hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
 		redSphere->SetStaticMesh(SphereVisualAsset.Object);
 		redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 		redSphere->SetWorldScale3D(FVector(0.8f));
-		redSphere->SetMaterial(0, MaterialAsset.Object);
-
-		// Initialize the hit display component as invisible
-		redSphere->SetVisibility(false);
+		redSphere->SetMaterial(0, hitDisplayMaterial);
 	} else {
 		// Log an error - why can't I get this to work?
 		// UE_LOG(LogTemp, ERROR, TEXT("Could not load player hit sphere"));
@@ -66,9 +72,7 @@ void UPlayerHitbox::initHitSphere() {
 
 // Set the visibility of the player hit component to true
 void UPlayerHitbox::displayHit() {
-	redSphere->SetVisibility(true);
-	// Wait 0.2 seconds before turning it off again
-	// How do I do this?
-	// Components may not access world timer manager.
+	// Set the opacity of the UI Hit Display material to 0.5.
+	uIHitAlphaVal = 0.5;
 	
 }

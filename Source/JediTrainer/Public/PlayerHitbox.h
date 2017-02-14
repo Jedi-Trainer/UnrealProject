@@ -43,4 +43,10 @@ private:
 	// Initialize the component that displays when the player is hit
 	void initHitSphere();
 
+	// Material instance used to store the UI Hit effect
+	UMaterialInstanceDynamic* hitDisplayMaterial;
+
+	// Variable to store the current opacity
+	float uIHitAlphaVal = 0.0;
+
 };
