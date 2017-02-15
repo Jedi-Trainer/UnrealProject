@@ -20,7 +20,23 @@ UPlayerHitbox::UPlayerHitbox()
 
 	health = STARTING_HEALTH;
 
-	// ...
+	// Precache models and materials
+	ConstructorHelpers::FObjectFinder<UStaticMesh> SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
+	if (SphereVisualAsset.Succeeded())
+	{
+		sphere = SphereVisualAsset.Object;
+	}
+	ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("/Game/Materials/UI_Hurt.UI_Hurt"));
+	if (MaterialAsset.Succeeded())
+	{
+		// Store the material in a dynamic material instance so that we can update the alpha value
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
+		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
+		hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, MaterialAsset.Object);
+		
+	}
+
+
 }
 
 
@@ -28,7 +44,10 @@ UPlayerHitbox::UPlayerHitbox()
 void UPlayerHitbox::BeginPlay()
 {
 	Super::BeginPlay();
-	initHitSphere();
+
+	initHitDisplay();
+	initHitboxCollider();
+
 	// ...
 	
 }
@@ -39,36 +58,52 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// Update the alpha value of the UI Hit Display material. This is so it gradually fades out after you are hit.
-	if (uIHitAlphaVal > 0) {
-		uIHitAlphaVal -= 0.001;
+	// If the player is not dead, update the alpha value of the UI Hit Display material. 
+	// This is so it gradually fades out after you are hit.
+	if (health > 0) {
+		if (uIHitAlphaVal > 0) {
+			uIHitAlphaVal -= 0.001;
+		}
+	//hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);;
 	}
-	hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);;
+}
 
-	// ...
+int UPlayerHitbox::GetHealth()
+{
+	return health;
 }
 
 // Initialize the component to display when the player is hit
-void UPlayerHitbox::initHitSphere() {
-	redSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HitSphere"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
-	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("Material'/Game/Materials/UI_Hurt.UI_Hurt'"));
-	
-	if (SphereVisualAsset.Succeeded() && MaterialAsset.Succeeded())
-	{
-		// Store the material in a dynamic material instance so that we can update the alpha value
-		hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
-		redSphere->SetStaticMesh(SphereVisualAsset.Object);
+void UPlayerHitbox::initHitDisplay() {
+	// redSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HitSphere"));
+	redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
+
+		
+		redSphere->SetStaticMesh(sphere);
 		redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 		redSphere->SetWorldScale3D(FVector(0.8f));
-		redSphere->SetMaterial(0, hitDisplayMaterial);
-	} else {
-		// Log an error - why can't I get this to work?
-		// UE_LOG(LogTemp, ERROR, TEXT("Could not load player hit sphere"));
-	}
-
+		if (hitDisplayMaterial != NULL) {
+			redSphere->SetMaterial(1, hitDisplayMaterial);
+		}
 
 }
+
+// Initialize the component that collides with incoming objects.
+void UPlayerHitbox::initHitboxCollider() {
+	capsuleCollider = NewObject<UCapsuleComponent>(this, TEXT("HitboxCollider"));
+	capsuleCollider->SetVisibility(false);
+	capsuleCollider->SetRelativeScale3D(FVector(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR));
+	capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
+	// Bind on hit function to component hit event
+	capsuleCollider->OnComponentHit.AddDynamic(this, &UPlayerHitbox::onHit);
+}
+
+void UPlayerHitbox::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	health -= 1;
+	displayHit();
+}
+
 
 // Set the visibility of the player hit component to true
 void UPlayerHitbox::displayHit() {
