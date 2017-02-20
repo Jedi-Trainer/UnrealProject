@@ -64,7 +64,10 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 		if (uIHitAlphaVal > 0) {
 			uIHitAlphaVal -= 0.001;
 		}
-	//hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);;
+		if (hitDisplayMaterial != NULL) {
+			//hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);;
+		}
+
 	}
 }
 
@@ -75,23 +78,25 @@ int UPlayerHitbox::GetHealth()
 
 // Initialize the component to display when the player is hit
 void UPlayerHitbox::initHitDisplay() {
-	// redSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HitSphere"));
+	UE_LOG(LogTemp, Warning, TEXT("TRACE: Initializing hit display sphere."));
 	redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
-
-		
-		redSphere->SetStaticMesh(sphere);
-		redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
-		redSphere->SetWorldScale3D(FVector(0.8f));
-		if (hitDisplayMaterial != NULL) {
-			redSphere->SetMaterial(1, hitDisplayMaterial);
-		}
+	redSphere->SetStaticMesh(sphere);
+	redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
+	redSphere->SetWorldScale3D(FVector(0.8f));
+	redSphere->SetVisibility(true);
+	if (hitDisplayMaterial != NULL) {
+		redSphere->SetMaterial(1, hitDisplayMaterial);
+		UE_LOG(LogTemp, Warning, TEXT("TRACE: Hit display sphere material set."));
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("WARNING: Hit display material instance is null."));
+	}
 
 }
 
 // Initialize the component that collides with incoming objects.
 void UPlayerHitbox::initHitboxCollider() {
 	capsuleCollider = NewObject<UCapsuleComponent>(this, TEXT("HitboxCollider"));
-	capsuleCollider->SetVisibility(false);
+	capsuleCollider->SetVisibility(true);
 	capsuleCollider->SetRelativeScale3D(FVector(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR));
 	capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
 	// Bind on hit function to component hit event
