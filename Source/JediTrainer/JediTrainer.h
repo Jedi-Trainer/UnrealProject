@@ -4,3 +4,5 @@
 
 #include "Engine.h"
 
+// Define log categories
+DECLARE_LOG_CATEGORY_EXTERN(TraceLog, Log, All);

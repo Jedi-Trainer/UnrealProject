@@ -5,7 +5,6 @@
 #include "Components/ActorComponent.h"
 #include "PlayerHitbox.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JEDITRAINER_API UPlayerHitbox : public USceneComponent
 {
@@ -34,32 +33,32 @@ private:
 
 
 	// Store health variable
-	int health;
+	UPROPERTY() int health;
 
 	// Red screen effect when hit
-	void displayHit();
+	UFUNCTION() void displayHit();
 
 	// Sphere to render in order to show the player has been hit
-	UStaticMeshComponent* redSphere;
-
+	UPROPERTY() UStaticMeshComponent* redSphere;
+	 
 	// Capsule collision component
-	UCapsuleComponent* capsuleCollider;
+	UPROPERTY() UCapsuleComponent* capsuleCollider;
 
 	// Initialize the component that displays when the player is hit
-	void initHitDisplay();
+	UFUNCTION() void initHitDisplay();
 
 	// Initialize the component that collides with incoming objects.
-	void initHitboxCollider();
+	UFUNCTION() void initHitboxCollider();
 
 	// Material instance used to store the UI Hit effect
-	UMaterialInstanceDynamic* hitDisplayMaterial;
+	UPROPERTY() UMaterialInstanceDynamic* hitDisplayMaterial;
 
 	// Variable to store the current opacity
-	float uIHitAlphaVal = 0.0;
+	UPROPERTY() float uIHitAlphaVal;
 
 	// Function to be called upon collision with another object.
 	UFUNCTION() void onHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	// Sphere model
-	UStaticMesh* sphere;
+	UPROPERTY() UStaticMesh* sphere;
 };

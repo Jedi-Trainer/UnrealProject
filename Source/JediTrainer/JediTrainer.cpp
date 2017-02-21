@@ -3,3 +3,6 @@
 #include "JediTrainer.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, JediTrainer, "JediTrainer" );
+
+//General Log
+DEFINE_LOG_CATEGORY(TraceLog);
