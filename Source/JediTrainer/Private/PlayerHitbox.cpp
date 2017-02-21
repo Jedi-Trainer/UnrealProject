@@ -33,8 +33,9 @@ UPlayerHitbox::UPlayerHitbox()
 		// Store the material in a dynamic material instance so that we can update the alpha value
 		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
 		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
 		hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, MaterialAsset.Object);
-		
+		UE_LOG(TraceLog, Warning, TEXT("Material asset found successfully."));
 	}
 
 
@@ -63,7 +64,7 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 	// This is so it gradually fades out after you are hit.
 	if (health > 0) {
 		if (uIHitAlphaVal > 0) {
-			uIHitAlphaVal -= 0.01;
+			uIHitAlphaVal -= 0.001;
 			// Why on Earth does this log produce and access violation?
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented: %s"), uIHitAlphaVal);
 			UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
@@ -90,13 +91,17 @@ int UPlayerHitbox::GetHealth()
 // Initialize the component to display when the player is hit
 void UPlayerHitbox::initHitDisplay() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing hit display sphere."));
-	redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
+	//redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
+	redSphere = ConstructObject<UStaticMeshComponent>(UStaticMeshComponent::StaticClass(), this, TEXT("redSphere"));
+	redSphere->RegisterComponent();
 	redSphere->SetStaticMesh(sphere);
 	redSphere->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 	//redSphere->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
-	redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
+	//redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 	redSphere->SetWorldScale3D(FVector(0.8f));
 	redSphere->SetVisibility(true);
+	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	redSphere->SetCastShadow(false);
 	if (hitDisplayMaterial != NULL) {
 		redSphere->SetMaterial(1, hitDisplayMaterial);
 		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
