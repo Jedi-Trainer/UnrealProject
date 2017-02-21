@@ -92,7 +92,8 @@ void UPlayerHitbox::initHitDisplay() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing hit display sphere."));
 	redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
 	redSphere->SetStaticMesh(sphere);
-	redSphere->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
+	redSphere->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	//redSphere->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
 	redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 	redSphere->SetWorldScale3D(FVector(0.8f));
 	redSphere->SetVisibility(true);
