@@ -51,7 +51,8 @@ private:
 	UFUNCTION() void initHitboxCollider();
 
 	// Material instance used to store the UI Hit effect
-	UPROPERTY() UMaterialInstanceDynamic* hitDisplayMaterial;
+	UPROPERTY() UMaterial* hitDisplayMaterial;
+	UPROPERTY() UMaterialInstanceDynamic* hitDisplayMaterialInstance;
 
 	// Variable to store the current opacity
 	UPROPERTY() float uIHitAlphaVal;

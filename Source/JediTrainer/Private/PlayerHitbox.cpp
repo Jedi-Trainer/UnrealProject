@@ -30,11 +30,13 @@ UPlayerHitbox::UPlayerHitbox()
 	ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("/Game/Materials/UI_Hurt.UI_Hurt"));
 	if (MaterialAsset.Succeeded())
 	{
-		// Store the material in a dynamic material instance so that we can update the alpha value
-		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
-		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
-		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
-		hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, MaterialAsset.Object);
+		if (MaterialAsset.Object == NULL) {
+			UE_LOG(TraceLog, Warning, TEXT("Found NULL asset."));
+
+		}
+
+		hitDisplayMaterial = (*MaterialAsset.Object);
+
 		UE_LOG(TraceLog, Warning, TEXT("Material asset found successfully."));
 	}
 
@@ -67,18 +69,18 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 			uIHitAlphaVal -= 0.001;
 			// Why on Earth does this log produce and access violation?
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented: %s"), uIHitAlphaVal);
-			UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
+			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
 		}
-		if (hitDisplayMaterial != NULL) {
+		if (hitDisplayMaterialInstance != NULL) {
 			// Access violation thrown after this function call
-			hitDisplayMaterial->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);
+			hitDisplayMaterialInstance->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);
 			// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
 			UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
 
 			// Is this redundant?
 			// redSphere->SetMaterial(1, hitDisplayMaterial);
 			// UE_LOG(TraceLog, Warning, TEXT("TRACE: Reset material."));
-		}
+		} 
 
 	}
 }
@@ -103,10 +105,24 @@ void UPlayerHitbox::initHitDisplay() {
 	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	redSphere->SetCastShadow(false);
 	if (hitDisplayMaterial != NULL) {
-		redSphere->SetMaterial(1, hitDisplayMaterial);
-		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
+		// Store the material in a dynamic material instance so that we can update the alpha value
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
+		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
+		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, this);
+		if (hitDisplayMaterialInstance != NULL) {
+			UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
+			hitDisplayMaterialInstance->AddToRoot(); // Ask about this later 
+			redSphere->SetMaterial(0, hitDisplayMaterialInstance);
+			UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
+		}
+		else {
+			UE_LOG(TraceLog, Warning, TEXT("ERROR: Material instance NULL."));
+		}
+		
+		
 	} else {
-		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hit display material instance is null."));
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hit display material is null."));
 	}
 
 }
