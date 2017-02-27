@@ -38,6 +38,12 @@ UPlayerHitbox::UPlayerHitbox()
 		hitDisplayMaterial = (MaterialAsset.Object);
 
 		UE_LOG(TraceLog, Warning, TEXT("Material asset found successfully."));
+
+		// Store the material in a dynamic material instance so that we can update the alpha value
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
+		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
+		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
+		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, NULL);
 	}
 
 
@@ -94,7 +100,7 @@ int UPlayerHitbox::GetHealth()
 void UPlayerHitbox::initHitDisplay() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing hit display sphere."));
 	//redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
-	redSphere = ConstructObject<UStaticMeshComponent>(UStaticMeshComponent::StaticClass(), this, TEXT("redSphere"));
+	redSphere = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
 	redSphere->RegisterComponent();
 	redSphere->SetStaticMesh(sphere);
 	redSphere->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
@@ -105,11 +111,7 @@ void UPlayerHitbox::initHitDisplay() {
 	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	redSphere->SetCastShadow(false);
 	if (hitDisplayMaterial != NULL) {
-		// Store the material in a dynamic material instance so that we can update the alpha value
-		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
-		// TOOD: Why does it need two references to the object? Why does it crash otherwise?
-		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
-		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, this);
+		
 		if (hitDisplayMaterialInstance != NULL) {
 			UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
 			hitDisplayMaterialInstance->AddToRoot(); // Ask about this later 
@@ -130,7 +132,7 @@ void UPlayerHitbox::initHitDisplay() {
 // Initialize the component that collides with incoming objects.
 void UPlayerHitbox::initHitboxCollider() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox collider initializing..."));
-	capsuleCollider = NewObject<UCapsuleComponent>(this, TEXT("HitboxCollider"));
+	capsuleCollider = NewObject<UCapsuleComponent>(this, UCapsuleComponent::StaticClass());
 	capsuleCollider->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
 	capsuleCollider->SetVisibility(true);
 	capsuleCollider->SetRelativeScale3D(FVector(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR));
