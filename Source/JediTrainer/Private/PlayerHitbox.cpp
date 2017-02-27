@@ -35,7 +35,7 @@ UPlayerHitbox::UPlayerHitbox()
 
 		}
 
-		hitDisplayMaterial = (*MaterialAsset.Object);
+		hitDisplayMaterial = (MaterialAsset.Object);
 
 		UE_LOG(TraceLog, Warning, TEXT("Material asset found successfully."));
 	}
