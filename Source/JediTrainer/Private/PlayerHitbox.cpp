@@ -87,9 +87,7 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 				// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
 				UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
 
-				// Is this redundant?
-				redSphere->SetMaterial(0, hitDisplayMaterialInstance);
-				UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material reset."));
+		
 			}
 		}
 
@@ -117,29 +115,17 @@ void UPlayerHitbox::initHitDisplay() {
 	redSphere->SetCastShadow(false);
 
 	if (hitDisplayMaterial != NULL) {
-		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, NULL);
+		redSphere->SetMaterial(0, hitDisplayMaterial);
+		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
+
+		hitDisplayMaterialInstance = redSphere->CreateAndSetMaterialInstanceDynamic(0);
 		UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
 	}
 	else {
 		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hit display material is null."));
 	}
 
-	if (hitDisplayMaterial != NULL) {
-		
-		if (hitDisplayMaterialInstance != NULL) {
-			UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
-			hitDisplayMaterialInstance->AddToRoot(); // Ask about this later 
-			redSphere->SetMaterial(0, hitDisplayMaterialInstance);
-			UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
-		}
-		else {
-			UE_LOG(TraceLog, Warning, TEXT("ERROR: Material instance NULL."));
-		}
-		
-		
-	} else {
-		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hit display material is null."));
-	}
+	
 
 }
 

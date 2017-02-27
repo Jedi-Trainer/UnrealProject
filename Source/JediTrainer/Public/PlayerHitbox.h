@@ -23,6 +23,8 @@ public:
 	// Accessor for health variable
 	UFUNCTION(BlueprintCallable, Category= "Switch Functions") int GetHealth();
 
+	// Property for hit display material
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material") UMaterial* hitDisplayMaterial;
 
 private:
 	// Constant representing the beginning health the player should have
@@ -51,7 +53,6 @@ private:
 	UFUNCTION() void initHitboxCollider();
 
 	// Material instance used to store the UI Hit effect
-	UPROPERTY() UMaterial* hitDisplayMaterial;
 	UPROPERTY() UMaterialInstanceDynamic* hitDisplayMaterialInstance;
 
 	// Variable to store the current opacity
