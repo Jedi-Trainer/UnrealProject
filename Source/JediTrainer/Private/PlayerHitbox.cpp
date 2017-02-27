@@ -19,7 +19,7 @@ UPlayerHitbox::UPlayerHitbox()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	health = STARTING_HEALTH;
-	uIHitAlphaVal = 1;
+	uIHitAlphaVal = 1.0;
 
 	// Precache models and materials
 	ConstructorHelpers::FObjectFinder<UStaticMesh> SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
@@ -27,6 +27,9 @@ UPlayerHitbox::UPlayerHitbox()
 	{
 		sphere = SphereVisualAsset.Object;
 	}
+
+	// The material should be set from within blueprints.
+	/*
 	ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("/Game/Materials/UI_Hurt.UI_Hurt"));
 	if (MaterialAsset.Succeeded())
 	{
@@ -45,7 +48,7 @@ UPlayerHitbox::UPlayerHitbox()
 		//hitDisplayMaterial = UMaterialInstanceDynamic::Create(MaterialAsset.Object, this);
 		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, NULL);
 	}
-
+	*/
 
 }
 
@@ -71,22 +74,24 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 	// If the player is not dead, update the alpha value of the UI Hit Display material. 
 	// This is so it gradually fades out after you are hit.
 	if (health > 0) {
-		if (uIHitAlphaVal > 0) {
-			uIHitAlphaVal -= 0.001;
+		if (uIHitAlphaVal > 0.0) {
+			uIHitAlphaVal -= 0.1;
 			// Why on Earth does this log produce and access violation?
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented: %s"), uIHitAlphaVal);
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
-		}
-		if (hitDisplayMaterialInstance != NULL) {
-			// Access violation thrown after this function call
-			hitDisplayMaterialInstance->SetScalarParameterValue(FName(TEXT("UI_Hit_Alpha")), uIHitAlphaVal);
-			// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
-			UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
+			if (hitDisplayMaterialInstance != NULL) {
+				// Access violation thrown after this function call
+				hitDisplayMaterialInstance->SetScalarParameterValue(TEXT("UI_Hit_Alpha"), uIHitAlphaVal);
+				//hitDisplayMaterialInstance->SetScalarParameterByIndex(0, uIHitAlphaVal);
+				
+				// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
+				UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
 
-			// Is this redundant?
-			// redSphere->SetMaterial(1, hitDisplayMaterial);
-			// UE_LOG(TraceLog, Warning, TEXT("TRACE: Reset material."));
-		} 
+				// Is this redundant?
+				redSphere->SetMaterial(0, hitDisplayMaterialInstance);
+				UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material reset."));
+			}
+		}
 
 	}
 }
@@ -110,6 +115,15 @@ void UPlayerHitbox::initHitDisplay() {
 	redSphere->SetVisibility(true);
 	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	redSphere->SetCastShadow(false);
+
+	if (hitDisplayMaterial != NULL) {
+		hitDisplayMaterialInstance = UMaterialInstanceDynamic::Create(hitDisplayMaterial, NULL);
+		UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hit display material is null."));
+	}
+
 	if (hitDisplayMaterial != NULL) {
 		
 		if (hitDisplayMaterialInstance != NULL) {
@@ -153,7 +167,7 @@ void UPlayerHitbox::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UP
 // Set the visibility of the player hit component to true
 void UPlayerHitbox::displayHit() {
 	// Set the opacity of the UI Hit Display material to 0.5.
-	uIHitAlphaVal = 1;
+	uIHitAlphaVal = 1.0;
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit displayed."));
 	
 }
