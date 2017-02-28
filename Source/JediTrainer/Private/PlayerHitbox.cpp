@@ -12,7 +12,7 @@
  */
 
 // Sets default values for this component's properties
-UPlayerHitbox::UPlayerHitbox()
+UPlayerHitboxComponent::UPlayerHitboxComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -54,7 +54,7 @@ UPlayerHitbox::UPlayerHitbox()
 
 
 // Called when the game starts
-void UPlayerHitbox::BeginPlay()
+void UPlayerHitboxComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -67,7 +67,7 @@ void UPlayerHitbox::BeginPlay()
 
 
 // Called every frame
-void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
+void UPlayerHitboxComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
@@ -99,13 +99,13 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 	}
 }
 
-int UPlayerHitbox::GetHealth()
+int UPlayerHitboxComponent::GetHealth()
 {
 	return health;
 }
 
 // Initialize the component to display when the player is hit
-void UPlayerHitbox::initHitDisplay() {
+void UPlayerHitboxComponent::initHitDisplay() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing hit display sphere."));
 	//redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
 	redSphere = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
@@ -135,7 +135,7 @@ void UPlayerHitbox::initHitDisplay() {
 }
 
 // Initialize the component that collides with incoming objects.
-void UPlayerHitbox::initHitboxCollider() {
+void UPlayerHitboxComponent::initHitboxCollider() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox collider initializing..."));
 	capsuleCollider = NewObject<UCapsuleComponent>(this, UCapsuleComponent::StaticClass());
 	capsuleCollider->RegisterComponent();
@@ -147,11 +147,11 @@ void UPlayerHitbox::initHitboxCollider() {
 	//capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
 	capsuleCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	// Bind on hit function to component hit event
-	capsuleCollider->OnComponentHit.AddDynamic(this, &UPlayerHitbox::onHit);
+	capsuleCollider->OnComponentHit.AddDynamic(this, &UPlayerHitboxComponent::onHit);
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox collider initialized."));
 }
 
-void UPlayerHitbox::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+void UPlayerHitboxComponent::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox has been hit."));
 	health -= 1;
@@ -160,7 +160,7 @@ void UPlayerHitbox::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UP
 
 
 // Set the visibility of the player hit component to true
-void UPlayerHitbox::displayHit() {
+void UPlayerHitboxComponent::displayHit() {
 	// Set the opacity of the UI Hit Display material to 0.5.
 	uIHitAlphaVal = 1.0;
 	redSphere->SetVisibility(true);

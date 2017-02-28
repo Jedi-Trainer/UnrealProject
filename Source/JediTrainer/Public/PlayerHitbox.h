@@ -6,13 +6,13 @@
 #include "PlayerHitbox.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class JEDITRAINER_API UPlayerHitbox : public USceneComponent
+class JEDITRAINER_API UPlayerHitboxComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPlayerHitbox();
+	UPlayerHitboxComponent();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
