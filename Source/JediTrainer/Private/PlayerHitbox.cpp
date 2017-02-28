@@ -75,20 +75,25 @@ void UPlayerHitbox::TickComponent( float DeltaTime, ELevelTick TickType, FActorC
 	// This is so it gradually fades out after you are hit.
 	if (health > 0) {
 		if (uIHitAlphaVal > 0.0) {
-			uIHitAlphaVal -= 0.1;
+			uIHitAlphaVal -= 0.01;
 			// Why on Earth does this log produce and access violation?
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented: %s"), uIHitAlphaVal);
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
-			if (hitDisplayMaterialInstance != NULL) {
-				// Access violation thrown after this function call
-				hitDisplayMaterialInstance->SetScalarParameterValue(TEXT("UI_Hit_Alpha"), uIHitAlphaVal);
-				//hitDisplayMaterialInstance->SetScalarParameterByIndex(0, uIHitAlphaVal);
-				
-				// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
-				UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
+			//if (hitDisplayMaterialInstance != NULL) {
 
-		
+			if (uIHitAlphaVal < 0.25) {
+				redSphere->SetVisibility(false);
 			}
+
+			//UMaterialInstanceDynamic* Mat_Inst = redSphere->CreateAndSetMaterialInstanceDynamic(0);
+
+			//Mat_Inst->SetScalarParameterValue(FName("UI_Hit_Alpha"), 1.0);
+			//hitDisplayMaterialInstance->SetScalarParameterValue(FName("UI_Hit_Alpha"), 1.0);
+				//hitDisplayMaterialInstance->SetScalarParameterByIndex(0, uIHitAlphaVal);
+				// Why? - I suspect that because the variable wasn't declared with an Unreal directive, the engine was garbage collecting it.
+			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance scalar parameters set."));
+		
+			//}
 		}
 
 	}
@@ -118,7 +123,7 @@ void UPlayerHitbox::initHitDisplay() {
 		redSphere->SetMaterial(0, hitDisplayMaterial);
 		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
 
-		hitDisplayMaterialInstance = redSphere->CreateAndSetMaterialInstanceDynamic(0);
+		//hitDisplayMaterialInstance = redSphere->CreateAndSetMaterialInstanceDynamic(0);
 		UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
 	}
 	else {
@@ -133,10 +138,14 @@ void UPlayerHitbox::initHitDisplay() {
 void UPlayerHitbox::initHitboxCollider() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox collider initializing..."));
 	capsuleCollider = NewObject<UCapsuleComponent>(this, UCapsuleComponent::StaticClass());
-	capsuleCollider->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
+	capsuleCollider->RegisterComponent();
+	capsuleCollider->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	//capsuleCollider->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
 	capsuleCollider->SetVisibility(true);
+	capsuleCollider->SetHiddenInGame(false);
 	capsuleCollider->SetRelativeScale3D(FVector(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR));
-	capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
+	//capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
+	capsuleCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	// Bind on hit function to component hit event
 	capsuleCollider->OnComponentHit.AddDynamic(this, &UPlayerHitbox::onHit);
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox collider initialized."));
@@ -154,6 +163,7 @@ void UPlayerHitbox::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UP
 void UPlayerHitbox::displayHit() {
 	// Set the opacity of the UI Hit Display material to 0.5.
 	uIHitAlphaVal = 1.0;
+	redSphere->SetVisibility(true);
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit displayed."));
 	
 }
