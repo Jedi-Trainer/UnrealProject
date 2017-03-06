@@ -61,3 +61,13 @@ UStaticMeshComponent* UCylinderComponent::GetStaticMeshComponent() {
 void UCylinderComponent::SetVisible(bool isVisible) {
 	cylinderMeshComponent->SetVisibility(isVisible);
 }
+
+// Sets the scale of the cylinder mesh component given three float values
+void UCylinderComponent::SetScale(int w, int d, int h) {
+	cylinderMeshComponent->SetRelativeScale3D(FVector(w, d, h));
+}
+
+// Sets a new world transform for the cylinder mesh component
+void UCylinderComponent::SetWorldTransform(FTransform newTransform) {
+	cylinderMeshComponent->SetWorldTransform(newTransform);
+}
