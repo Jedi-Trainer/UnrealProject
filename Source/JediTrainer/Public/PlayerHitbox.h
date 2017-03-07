@@ -26,6 +26,14 @@ public:
 	// Property for hit display material
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material") UMaterial* hitDisplayMaterial;
 
+protected:
+	// Initialize the component that collides with incoming objects.
+	UFUNCTION() void initHitboxCollider();
+
+	// Function to be called upon collision with another object.
+	UFUNCTION() void onHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+
 private:
 	// Constant representing the beginning health the player should have
 	// Consider parameterizing this field so that it can be modified outside of the game mode
@@ -49,17 +57,11 @@ private:
 	// Initialize the component that displays when the player is hit
 	UFUNCTION() void initHitDisplay();
 
-	// Initialize the component that collides with incoming objects.
-	UFUNCTION() void initHitboxCollider();
-
 	// Material instance used to store the UI Hit effect
 	UPROPERTY() UMaterialInstanceDynamic* hitDisplayMaterialInstance;
 
 	// Variable to store the current opacity
 	UPROPERTY() float uIHitAlphaVal;
-
-	// Function to be called upon collision with another object.
-	UFUNCTION() void onHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	// Sphere model
 	UPROPERTY() UStaticMesh* sphere;
