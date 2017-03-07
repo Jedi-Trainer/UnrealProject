@@ -28,7 +28,7 @@ public:
 
 protected:
 	// Initialize the component that collides with incoming objects.
-	UFUNCTION() void initHitboxCollider();
+	UFUNCTION() virtual void initHitboxCollider();
 
 	// Function to be called upon collision with another object.
 	UFUNCTION() void onHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

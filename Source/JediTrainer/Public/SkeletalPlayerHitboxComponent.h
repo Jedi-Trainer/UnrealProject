@@ -19,7 +19,7 @@ public:
 
 protected:
 	// Initialize the cylinder components for each body part.
-	UFUNCTION() void initHitboxCollider();
+	UFUNCTION() void initHitboxCollider() override;
 
 private:
 	// TODO Parameterize these constants

@@ -59,11 +59,12 @@ UStaticMeshComponent* UCylinderComponent::GetStaticMeshComponent() {
 }
 
 void UCylinderComponent::SetVisible(bool isVisible) {
+	SetVisibility(isVisible);
 	cylinderMeshComponent->SetVisibility(isVisible);
 }
 
 // Sets the scale of the cylinder mesh component given three float values
-void UCylinderComponent::SetScale(int w, int d, int h) {
+void UCylinderComponent::SetScale(float w, float d, float h) {
 	cylinderMeshComponent->SetRelativeScale3D(FVector(w, d, h));
 }
 
