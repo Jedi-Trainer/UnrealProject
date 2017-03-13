@@ -22,7 +22,7 @@ ARequestHandler::ARequestHandler(const class FObjectInitializer& ObjectInitializ
 // Called when the game starts or when spawned
 void ARequestHandler::BeginPlay()
 {
-	sendScore();	
+	//sendScore();	
 	Super::BeginPlay();
 
 }
@@ -54,12 +54,55 @@ void ARequestHandler::sendScore() {
 
 }
 
+void ARequestHandler::GetScores() {	
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	//This is the url on which to process the request
+	Request->SetURL("http://jeditrainer.herokuapp.com/scores");
+	Request->SetVerb("GET");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	if (Request->ProcessRequest()) {
+		UE_LOG(TraceLog, Warning, TEXT("Request processed successfully."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Request could not be processed."));
+	}
+}
+
+TArray<FString> ARequestHandler::GetScoreRecords() {
+	return scoreRecords;
+}
 
 void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
 	//Use bWasSuccessful in order to check if the request went through to the server.
 	//If it did, the user should be connected to the Internet.
 	//If not, then something must be wrong. 
 	//We could do a whole lot better, as something could go wrong that doesn't involve the Internet...
+	//Create a pointer to hold the json serialized data
+	TSharedPtr<FJsonValue> JsonObject;;
+
+	//Create a reader pointer to read the json data
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	//Deserialize the json data given Reader and the actual object to deserialize
+	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+	{
+		// https://answers.unrealengine.com/questions/271705/how-to-parse-json-array.html
+		TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsArray();
+		
+		
+		for (int i = 0; i < jsonArray.Num(); i++) {
+			TSharedPtr<FJsonObject> object = jsonArray[i]->AsObject();
+			FString name = object->GetStringField("name");
+			int score = object->GetIntegerField("score");
+			FString scoreRecord = name + "\t-\t" + FString::FromInt(score);
+			this->scoreRecords.Emplace(scoreRecord);
+			UE_LOG(TraceLog, Warning, TEXT("Value emplaced."));
+		}
+
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Could not deserialize JSON content."));
+	}
 
 }
 

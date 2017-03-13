@@ -4,6 +4,7 @@
 
 #include "GameFramework/Actor.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "UnrealString.h"
 #include "RequestHandler.generated.h"
 
 UCLASS()
@@ -41,6 +42,11 @@ public:
 	UFUNCTION()
 		void sendScore();
 
+	// TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores();
+
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
+
 	//Assign this function to call when the request processes successfully
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
@@ -53,6 +59,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+private:
+	UPROPERTY() TArray<FString> scoreRecords;
 
 
 };
