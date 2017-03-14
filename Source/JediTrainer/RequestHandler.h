@@ -47,6 +47,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
 
+	//DECLARE_EVENT(ARequestHandler, FOnReceivedScoreRecords)
+	//FOnReceivedScoreRecords& OnReceivedScoreRecords() { return ReceivedScoreRecordsEvent; }
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE( FOnReceivedScoreRecords );
+
+	UPROPERTY(BlueprintAssignable, Category = "Events") FOnReceivedScoreRecords ReceivedScoreRecordsEvent;
+
 	//Assign this function to call when the request processes successfully
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
@@ -61,6 +67,7 @@ public:
 
 private:
 	UPROPERTY() TArray<FString> scoreRecords;
+
 
 
 };

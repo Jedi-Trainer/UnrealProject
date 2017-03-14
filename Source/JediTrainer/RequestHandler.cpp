@@ -28,6 +28,7 @@ void ARequestHandler::BeginPlay()
 }
 
 //This will actually send the score up to our database
+//Need these parameters: name, score, difficulty
 void ARequestHandler::sendScore() {
 	//Create the JSON object
 	TSharedPtr<FJsonObject> json = MakeShareable(new FJsonObject);
@@ -86,10 +87,13 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
 	{
+		// This answer on Unreal answers was helpful while I was writing this section.
 		// https://answers.unrealengine.com/questions/271705/how-to-parse-json-array.html
+
+		// Assume that the JSON Object we are receiving is an array containing records.
 		TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsArray();
 		
-		
+		// Loop through each object in the JSON array.
 		for (int i = 0; i < jsonArray.Num(); i++) {
 			TSharedPtr<FJsonObject> object = jsonArray[i]->AsObject();
 			FString name = object->GetStringField("name");
@@ -98,6 +102,8 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 			this->scoreRecords.Emplace(scoreRecord);
 			UE_LOG(TraceLog, Warning, TEXT("Value emplaced."));
 		}
+
+		ReceivedScoreRecordsEvent.Broadcast();
 
 	}
 	else {
