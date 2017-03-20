@@ -58,4 +58,15 @@ void USkeletalPlayerHitboxComponent::TickComponent(float DeltaTime, ELevelTick T
 	if(abdomenComponent) abdomenComponent->SetWorldTransform(abdomenTransform);
 	if(pelvisComponent) pelvisComponent->SetWorldTransform(pelvisTransform);
 
+	// Lerp chest
+	// FTransform tempTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, CHEST_OFFSET), FVector(CHEST_SCALE_X, CHEST_SCALE_Y, CHEST_SCALE_Z));
+	// chestTransform = FMath::Lerp<FTransform>(chestTransform, tempTransform, 0.5);
+
+	chestTransform = FTransform(
+		FMath::Lerp(chestTransform.Rotator(), GetComponentRotation(), 0.5),
+		FMath::Lerp(chestTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, CHEST_OFFSET), 0.5),
+		FVector(CHEST_SCALE_X, CHEST_SCALE_Y, CHEST_SCALE_Z));
+
+    
+
 }
