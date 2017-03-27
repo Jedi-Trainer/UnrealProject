@@ -100,8 +100,6 @@ void UPlayerHitboxComponent::initHitDisplay() {
 	if (hitDisplayMaterial != NULL) {
 		redSphere->SetMaterial(0, hitDisplayMaterial);
 		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
-
-		//hitDisplayMaterialInstance = redSphere->CreateAndSetMaterialInstanceDynamic(0);
 		UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
 	}
 	else {
@@ -118,11 +116,9 @@ void UPlayerHitboxComponent::initHitboxCollider() {
 	capsuleCollider = NewObject<UCapsuleComponent>(this, UCapsuleComponent::StaticClass());
 	capsuleCollider->RegisterComponent();
 	capsuleCollider->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	//capsuleCollider->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
-	capsuleCollider->SetVisibility(true);
+	capsuleCollider->SetVisibility(isVisibleDebug);
 	capsuleCollider->SetHiddenInGame(false);
 	capsuleCollider->SetRelativeScale3D(FVector(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR));
-	//capsuleCollider->AddLocalOffset(FVector(0, 0, VERTICAL_OFFSET));
 	capsuleCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	// Bind on hit function to component hit event
 	capsuleCollider->OnComponentHit.AddDynamic(this, &UPlayerHitboxComponent::onHit);

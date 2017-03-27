@@ -55,6 +55,38 @@ void ARequestHandler::sendScore() {
 
 }
 
+//Get the top 10 all-time scores
+void ARequestHandler::GetScoresTop10() {
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	//This is the url on which to process the request
+	Request->SetURL("http://jeditrainer.herokuapp.com/top10");
+	Request->SetVerb("GET");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	if (Request->ProcessRequest()) {
+		UE_LOG(TraceLog, Warning, TEXT("Request processed successfully."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Request could not be processed."));
+	}
+}
+
+//Get the bottom 10 scores
+void ARequestHandler::GetScoresBottom10() {
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	//This is the url on which to process the request
+	Request->SetURL("http://jeditrainer.herokuapp.com/bottom10");
+	Request->SetVerb("GET");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	if (Request->ProcessRequest()) {
+		UE_LOG(TraceLog, Warning, TEXT("Request processed successfully."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Request could not be processed."));
+	}
+}
+
 void ARequestHandler::GetScores() {	
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);

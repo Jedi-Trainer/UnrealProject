@@ -7,11 +7,13 @@
 #include "UnrealString.h"
 #include "RequestHandler.generated.h"
 
+
+
 UCLASS()
 class JEDITRAINER_API ARequestHandler : public AActor
 {
 	GENERATED_BODY()
-
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReceivedScoreRecords);
 public:
 	FHttpModule * Http;
 
@@ -45,11 +47,14 @@ public:
 	// TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores();
 
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresTop10();
+
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresBottom10();
+
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
 
 	//DECLARE_EVENT(ARequestHandler, FOnReceivedScoreRecords)
 	//FOnReceivedScoreRecords& OnReceivedScoreRecords() { return ReceivedScoreRecordsEvent; }
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE( FOnReceivedScoreRecords );
 
 	UPROPERTY(BlueprintAssignable, Category = "Events") FOnReceivedScoreRecords ReceivedScoreRecordsEvent;
 

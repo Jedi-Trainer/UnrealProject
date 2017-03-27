@@ -49,8 +49,30 @@ void UCylinderComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 // This method returns a random point on the cylinder.
 FVector UCylinderComponent::GetRandomPoint() {
-	// Unimplemented
-	return FVector(0.0, 0.0, 0.0);
+	// Get the scale of the mesh
+	FVector scale = cylinderMeshComponent->GetComponentTransform().GetScale3D();
+
+	// Find the origin point
+	float cylinderRadius = 50;
+	float originX = GetComponentLocation().X;
+	float originY = GetComponentLocation().Y;
+	float originZ = GetComponentLocation().Z;
+
+	// First find a random point on the cylinder assuming it is aligned along the z axis at the component position
+	float randX = FMath::RandRange(originX - cylinderRadius *  scale.X, originX + cylinderRadius * scale.X);
+	float randY = FMath::RandRange(originY - cylinderRadius *  scale.Y, originY + cylinderRadius * scale.Y);
+	float randZ = FMath::RandRange(originZ - cylinderRadius *  scale.Z, originZ + cylinderRadius * scale.Z);
+	FVector randomPoint = FVector(randX, randY, randZ);
+
+	// Next, rotate the point about each axis given the angles from the component rotator
+	FVector rotation = GetComponentRotation().Euler();
+	
+	randomPoint = randomPoint.RotateAngleAxis(rotation.X, FVector(1, 0, 0));
+	randomPoint = randomPoint.RotateAngleAxis(rotation.Y, FVector(0, 1, 0));
+	randomPoint = randomPoint.RotateAngleAxis(rotation.Z, FVector(0, 0, 1));
+
+	// Return the point rotated about the angles
+	return randomPoint;
 }
 
 // Get the static mesh component of this CylinderComponent.

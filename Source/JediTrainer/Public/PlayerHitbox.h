@@ -20,6 +20,9 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
+	// Should the hitbox itself be visible
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rendering") bool isVisibleDebug;
+
 	// Accessor for health variable
 	UFUNCTION(BlueprintCallable, Category= "Switch Functions") int GetHealth();
 
