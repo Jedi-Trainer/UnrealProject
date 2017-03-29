@@ -12,9 +12,9 @@ UPlayerControllerManagerComponent::UPlayerControllerManagerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// Instantiate menu controller
-	menuControllerComponent = NewObject<UMenuControllerComponent>(this, UMenuControllerComponent::StaticClass());
-	menuControllerComponent->RegisterComponent();
-	menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	//menuControllerComponent = NewObject<UMenuControllerComponent>(this, UMenuControllerComponent::StaticClass());
+	//menuControllerComponent->RegisterComponent();
+	//menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 
 	// ...
 }
