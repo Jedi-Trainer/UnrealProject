@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
-#include "PlayerHitbox.generated.h"
+#include "PlayerHitboxComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JEDITRAINER_API UPlayerHitboxComponent : public USceneComponent

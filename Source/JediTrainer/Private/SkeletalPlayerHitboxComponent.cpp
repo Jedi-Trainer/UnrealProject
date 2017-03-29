@@ -75,22 +75,18 @@ void USkeletalPlayerHitboxComponent::TickComponent(float DeltaTime, ELevelTick T
 // Gets a random point on any hitbox cylinder for targeting
 FVector USkeletalPlayerHitboxComponent::GetRandomPoint() {
 	int cylinderNumber = FMath::RandRange(0, 3);
+	UE_LOG(TraceLog, Warning, TEXT("TRACE: Randomly selected cylinder: %i"), cylinderNumber);
 	switch (cylinderNumber)
 	{
 	case 0:
 		return headComponent->GetRandomPoint();
-		break;
 	case 2:
 		return abdomenComponent->GetRandomPoint();
-		break;
 	case 3:
 		return pelvisComponent->GetRandomPoint();
-		break;
 	case 1:
 	default:
 		return chestComponent->GetRandomPoint();
-		break;
-
 	}
 
 }

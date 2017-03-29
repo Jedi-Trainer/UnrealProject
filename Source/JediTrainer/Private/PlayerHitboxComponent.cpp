@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "JediTrainer.h"
-#include "PlayerHitbox.h"
+#include "PlayerHitboxComponent.h"
 
 /**
  * PlayerHitbox Class
@@ -93,9 +93,10 @@ void UPlayerHitboxComponent::initHitDisplay() {
 	//redSphere->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
 	//redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 	redSphere->SetWorldScale3D(FVector(0.8f));
-	redSphere->SetVisibility(true);
+	redSphere->SetVisibility(false);
 	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	redSphere->SetCastShadow(false);
+	redSphere->SetRelativeLocation(FVector(0, 0, -25));
 
 	if (hitDisplayMaterial != NULL) {
 		redSphere->SetMaterial(0, hitDisplayMaterial);

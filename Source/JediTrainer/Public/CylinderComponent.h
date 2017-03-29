@@ -46,6 +46,9 @@ protected:
 private:
 	// Cylinder model
 	UPROPERTY() UStaticMesh* cylinder;
+
+	// Transform
+	UPROPERTY() FTransform cylinderTransform;
 	
 	// Static mesh component
 	UPROPERTY() UStaticMeshComponent* cylinderMeshComponent;
