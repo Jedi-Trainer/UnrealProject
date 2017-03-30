@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "PlayerHitbox.h"
+#include "PlayerHitboxComponent.h"
 #include "CylinderComponent.h"
 #include "SkeletalPlayerHitboxComponent.generated.h"
 
