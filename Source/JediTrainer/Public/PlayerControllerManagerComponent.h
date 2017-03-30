@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void PressTrigger();
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void PressGrip();
 
+	// Called to pause the game
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void SetMenuMode(bool isMenu);
+
 private:
 	UPROPERTY() UPlayerControllerComponent *menuControllerComponent;
 	UPROPERTY() UPlayerControllerComponent *heldObjectControllerComponent;

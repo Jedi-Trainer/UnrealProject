@@ -11,11 +11,6 @@ UPlayerControllerManagerComponent::UPlayerControllerManagerComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// Instantiate menu controller
-	//menuControllerComponent = NewObject<UMenuControllerComponent>(this, UMenuControllerComponent::StaticClass());
-	//menuControllerComponent->RegisterComponent();
-	//menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-
 	// ...
 }
 
@@ -25,7 +20,10 @@ void UPlayerControllerManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	// Instantiate menu controller
+	menuControllerComponent = NewObject<UMenuControllerComponent>(this, UMenuControllerComponent::StaticClass());
+	menuControllerComponent->RegisterComponent();
+	menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 	
 }
 
@@ -46,5 +44,30 @@ void UPlayerControllerManagerComponent::PressTrigger()
 void UPlayerControllerManagerComponent::PressGrip()
 {
 
+}
+
+void UPlayerControllerManagerComponent::SetMenuMode(bool isMenu)
+{
+	// Deactivate components
+	menuControllerComponent->SetActiveControllerComponent(false);
+	heldObjectControllerComponent->SetActiveControllerComponent(false);
+
+	// Select new active component
+	if (isMenu) 
+	{
+		currentControllerComponent = menuControllerComponent;
+	}
+	else if(heldObjectControllerComponent)
+	{
+		currentControllerComponent = heldObjectControllerComponent;
+	}
+	else 
+	{
+		// This case will be used when there is a default 'grabber' state the player uses to pick up a lightsaber.
+		currentControllerComponent = NULL;
+	}
+
+	// Activate the controller component
+	currentControllerComponent->SetActiveControllerComponent(true);
 }
 

@@ -33,4 +33,16 @@ void UPlayerControllerComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	// ...
 }
 
+void UPlayerControllerComponent::PressTrigger()
+{
+}
+
+void UPlayerControllerComponent::PressGrip()
+{
+}
+
+void UPlayerControllerComponent::SetActiveControllerComponent(bool isActive)
+{
+}
+
 

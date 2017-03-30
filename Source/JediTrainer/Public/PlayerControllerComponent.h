@@ -24,8 +24,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Input from Controller Manager
-	//virtual void PressTrigger();
-	//virtual void PressGrip();
+	virtual void PressTrigger();
+	virtual void PressGrip();
+
+	// Method to toggle this controller active
+	virtual void SetActiveControllerComponent(bool isActive);
 		
 	
 };
