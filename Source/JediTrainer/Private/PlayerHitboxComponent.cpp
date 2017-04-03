@@ -53,14 +53,14 @@ void UPlayerHitboxComponent::TickComponent( float DeltaTime, ELevelTick TickType
 	// This is so it gradually fades out after you are hit.
 	if (health > 0) {
 		if (uIHitAlphaVal > 0.0) {
-			uIHitAlphaVal -= 0.01;
+			uIHitAlphaVal -= 0.03;
 			// Why on Earth does this log produce and access violation?
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented: %s"), uIHitAlphaVal);
 			//UE_LOG(TraceLog, Warning, TEXT("TRACE: Material instance alpha value decremented."));
 			//if (hitDisplayMaterialInstance != NULL) {
 
 			if (uIHitAlphaVal < 0.25) {
-				redSphere->SetVisibility(false);
+				hitDisplaySphere->SetVisibility(false);
 			}
 
 			//UMaterialInstanceDynamic* Mat_Inst = redSphere->CreateAndSetMaterialInstanceDynamic(0);
@@ -85,21 +85,18 @@ int UPlayerHitboxComponent::GetHealth()
 // Initialize the component to display when the player is hit
 void UPlayerHitboxComponent::initHitDisplay() {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing hit display sphere."));
-	//redSphere = NewObject<UStaticMeshComponent>(this, TEXT("HitSphere"));
-	redSphere = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
-	redSphere->RegisterComponent();
-	redSphere->SetStaticMesh(sphere);
-	redSphere->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	//redSphere->SetWorldTransform(GetAttachmentRoot()->GetComponentTransform());
-	//redSphere->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
-	redSphere->SetWorldScale3D(FVector(0.8f));
-	redSphere->SetVisibility(false);
-	redSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	redSphere->SetCastShadow(false);
-	redSphere->SetRelativeLocation(FVector(0, 0, -25));
+	hitDisplaySphere = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
+	hitDisplaySphere->RegisterComponent();
+	hitDisplaySphere->SetStaticMesh(sphere);
+	hitDisplaySphere->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	hitDisplaySphere->SetWorldScale3D(FVector(0.8f));
+	hitDisplaySphere->SetVisibility(false);
+	hitDisplaySphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	hitDisplaySphere->SetCastShadow(false);
+	hitDisplaySphere->SetRelativeLocation(FVector(0, 0, -25));
 
 	if (hitDisplayMaterial != NULL) {
-		redSphere->SetMaterial(0, hitDisplayMaterial);
+		hitDisplaySphere->SetMaterial(0, hitDisplayMaterial);
 		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit display sphere material set."));
 		UE_LOG(TraceLog, Warning, TEXT("Material instance created successfully."));
 	}
@@ -129,8 +126,13 @@ void UPlayerHitboxComponent::initHitboxCollider() {
 void UPlayerHitboxComponent::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox has been hit."));
-	health -= 1;
-	displayHit();
+	// Only take damage if the hit display is at less than 25% opacity.
+	// This is so that the player never takes damage while the hit indicator is still visible.
+	if (uIHitAlphaVal < 0.25)
+	{
+		health -= 1;
+		displayHit();
+	}
 }
 
 
@@ -138,7 +140,7 @@ void UPlayerHitboxComponent::onHit(UPrimitiveComponent * HitComp, AActor * Other
 void UPlayerHitboxComponent::displayHit() {
 	// Set the opacity of the UI Hit Display material to 0.5.
 	uIHitAlphaVal = 1.0;
-	redSphere->SetVisibility(true);
+	hitDisplaySphere->SetVisibility(true);
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hit displayed."));
 	
 }
