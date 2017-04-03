@@ -52,7 +52,7 @@ private:
 	UFUNCTION() void displayHit();
 
 	// Sphere to render in order to show the player has been hit
-	UPROPERTY() UStaticMeshComponent* redSphere;
+	UPROPERTY() UStaticMeshComponent* hitDisplaySphere;
 	 
 	// Capsule collision component
 	UPROPERTY() UCapsuleComponent* capsuleCollider;
