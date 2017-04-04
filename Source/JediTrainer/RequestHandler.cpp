@@ -2,6 +2,7 @@
 
 #include "JediTrainer.h"
 #include "RequestHandler.h"
+#include <string> 
 
 /**
 Tutorials followed:
@@ -56,11 +57,11 @@ void ARequestHandler::sendScore() {
 }
 
 //Get the top 10 all-time scores
-void ARequestHandler::GetScoresTop10() {
+void ARequestHandler::GetScoresTop10(int playerScore) {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/top10");
+	Request->SetURL("http://jeditrainer.herokuapp.com/top10/" + FString::FromInt(playerScore));
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
@@ -72,11 +73,11 @@ void ARequestHandler::GetScoresTop10() {
 }
 
 //Get the bottom 10 scores
-void ARequestHandler::GetScoresBottom10() {
+void ARequestHandler::GetScoresBottom10(int playerScore) {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/bottom10");
+	Request->SetURL("http://jeditrainer.herokuapp.com/bottom10/" + FString::FromInt(playerScore));
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
@@ -87,11 +88,11 @@ void ARequestHandler::GetScoresBottom10() {
 	}
 }
 
-void ARequestHandler::GetScores() {	
+void ARequestHandler::GetScores(int playerScore) {	
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/scores");
+	Request->SetURL("http://jeditrainer.herokuapp.com/nearby/" + FString::FromInt(playerScore));
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
@@ -112,34 +113,41 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 	//If not, then something must be wrong. 
 	//We could do a whole lot better, as something could go wrong that doesn't involve the Internet...
 	//Create a pointer to hold the json serialized data
-	TSharedPtr<FJsonValue> JsonObject;;
+	if (bWasSuccessful) {
+		TSharedPtr<FJsonValue> JsonObject;
 
-	//Create a reader pointer to read the json data
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-	//Deserialize the json data given Reader and the actual object to deserialize
-	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-	{
-		// This answer on Unreal answers was helpful while I was writing this section.
-		// https://answers.unrealengine.com/questions/271705/how-to-parse-json-array.html
+		//Create a reader pointer to read the json data
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+		//Deserialize the json data given Reader and the actual object to deserialize
+		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+		{
+			// This answer on Unreal answers was helpful while I was writing this section.
+			// https://answers.unrealengine.com/questions/271705/how-to-parse-json-array.html
 
-		// Assume that the JSON Object we are receiving is an array containing records.
-		TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsArray();
-		
-		// Loop through each object in the JSON array.
-		for (int i = 0; i < jsonArray.Num(); i++) {
-			TSharedPtr<FJsonObject> object = jsonArray[i]->AsObject();
-			FString name = object->GetStringField("name");
-			int score = object->GetIntegerField("score");
-			FString scoreRecord = name + "\t-\t" + FString::FromInt(score);
-			this->scoreRecords.Emplace(scoreRecord);
-			UE_LOG(TraceLog, Warning, TEXT("Value emplaced."));
+			// Assume that the JSON Object we are receiving is an array containing records.
+			TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsArray();
+
+			this->scoreRecords = TArray<FString>();
+
+			// Loop through each object in the JSON array.
+			for (int i = 0; i < jsonArray.Num(); i++) {
+				TSharedPtr<FJsonObject> object = jsonArray[i]->AsObject();
+				FString name = object->GetStringField("name");
+				int score = object->GetIntegerField("score");
+				FString scoreRecord = name + "\t-\t" + FString::FromInt(score);
+				this->scoreRecords.Emplace(scoreRecord);
+				UE_LOG(TraceLog, Warning, TEXT("Value emplaced."));
+			}
+
+			ReceivedScoreRecordsEvent.Broadcast();
+
 		}
-
-		ReceivedScoreRecordsEvent.Broadcast();
-
+		else {
+			UE_LOG(TraceLog, Warning, TEXT("WARNING: Could not deserialize JSON content."));
+		}
 	}
 	else {
-		UE_LOG(TraceLog, Warning, TEXT("WARNING: Could not deserialize JSON content."));
+		//handle error
 	}
 
 }

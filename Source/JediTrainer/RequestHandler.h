@@ -44,11 +44,11 @@ public:
 	UFUNCTION() void sendScore();
 
 	// TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
-	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores();
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores(int playerScore);
 
-	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresTop10();
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresTop10(int playerScore);
 
-	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresBottom10();
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresBottom10(int playerScore);
 
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
 
