@@ -148,6 +148,9 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 	}
 	else {
 		//handle error
+		this->scoreRecords = TArray<FString>();
+		this->scoreRecords.Emplace(FString("Error: No response from web server."));
+
 	}
 
 }
