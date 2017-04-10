@@ -13,7 +13,15 @@ class JEDITRAINER_API UJediTrainerGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
-	
-	
+public:
+	UJediTrainerGameInstance(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Game Configuration")
+		int32 LightSaberColorIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Configuration")
+		int32 Difficulty;
+
+
 	
 };

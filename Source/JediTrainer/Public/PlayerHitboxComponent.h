@@ -40,7 +40,7 @@ protected:
 private:
 	// Constant representing the beginning health the player should have
 	// Consider parameterizing this field so that it can be modified outside of the game mode
-	const int STARTING_HEALTH = 10;
+	const int STARTING_HEALTH = 5;
 	const float SCALE_FACTOR = 1.5;
 	const float VERTICAL_OFFSET = -30;
 
