@@ -107,6 +107,10 @@ TArray<FString> ARequestHandler::GetScoreRecords() {
 	return scoreRecords;
 }
 
+int ARequestHandler::GetPlayerScoreIndex() {
+	return playerScoreIndex;
+}
+
 void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
 	//Use bWasSuccessful in order to check if the request went through to the server.
 	//If it did, the user should be connected to the Internet.
@@ -125,7 +129,9 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 			// https://answers.unrealengine.com/questions/271705/how-to-parse-json-array.html
 
 			// Assume that the JSON Object we are receiving is an array containing records.
-			TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsArray();
+			TArray<TSharedPtr<FJsonValue>> jsonArray = JsonObject->AsObject()->GetArrayField("scores");
+
+			this->playerScoreIndex = JsonObject->AsObject()->GetIntegerField("position");
 
 			this->scoreRecords = TArray<FString>();
 

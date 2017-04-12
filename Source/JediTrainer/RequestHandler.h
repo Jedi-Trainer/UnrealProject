@@ -52,6 +52,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
 
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") int GetPlayerScoreIndex();
+
 	//DECLARE_EVENT(ARequestHandler, FOnReceivedScoreRecords)
 	//FOnReceivedScoreRecords& OnReceivedScoreRecords() { return ReceivedScoreRecordsEvent; }
 
@@ -72,6 +74,6 @@ public:
 private:
 	UPROPERTY() TArray<FString> scoreRecords;
 
-
+	UPROPERTY() int playerScoreIndex;
 
 };

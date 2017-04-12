@@ -24,6 +24,18 @@ void UPlayerControllerComponent::BeginPlay()
 	
 }
 
+void UPlayerControllerComponent::onTriggerPressed()
+{
+}
+
+void UPlayerControllerComponent::onGripPressed()
+{
+}
+
+void UPlayerControllerComponent::onActiveControllerSet(bool isActive)
+{
+}
+
 
 // Called every frame
 void UPlayerControllerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -33,16 +45,23 @@ void UPlayerControllerComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	// ...
 }
 
-void UPlayerControllerComponent::PressTrigger()
+// The body of these functions are defined by "<FunctionName>_Implementation" because they are Blueprint Native
+// functions, which means that they have a definition in C++ but can be overridden in blueprints.
+void UPlayerControllerComponent::PressTrigger_Implementation()
 {
+	onTriggerPressed();
 }
 
-void UPlayerControllerComponent::PressGrip()
+// The body of these functions are defined by "<FunctionName>_Implementation" because they are Blueprint Native
+// functions, which means that they have a definition in C++ but can be overridden in blueprints.
+void UPlayerControllerComponent::PressGrip_Implementation()
 {
+	onGripPressed();
 }
 
-void UPlayerControllerComponent::SetActiveControllerComponent(bool isActive)
+// The body of these functions are defined by "<FunctionName>_Implementation" because they are Blueprint Native
+// functions, which means that they have a definition in C++ but can be overridden in blueprints.
+void UPlayerControllerComponent::SetActiveControllerComponent_Implementation(bool isActive)
 {
+	onActiveControllerSet(isActive);
 }
-
-

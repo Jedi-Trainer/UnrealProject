@@ -5,8 +5,8 @@
 #include "Components/SceneComponent.h"
 #include "PlayerControllerComponent.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+// This class my be inherited by C++ classes or by Blueprint classes.
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class UPlayerControllerComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -19,16 +19,20 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void onTriggerPressed();
+	virtual void onGripPressed();
+	virtual void onActiveControllerSet(bool isActive);
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Input from Controller Manager
-	virtual void PressTrigger();
-	virtual void PressGrip();
+	UFUNCTION(BlueprintNativeEvent, Category = "Controller Input Functions") void PressTrigger();
+	UFUNCTION(BlueprintNativeEvent, Category = "Controller Input Functions") void PressGrip();
 
 	// Method to toggle this controller active
-	virtual void SetActiveControllerComponent(bool isActive);
+	UFUNCTION(BlueprintNativeEvent, Category = "Controller Input Functions") void SetActiveControllerComponent(bool isActive);
 		
 	
 };

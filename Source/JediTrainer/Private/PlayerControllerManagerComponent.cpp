@@ -21,10 +21,11 @@ void UPlayerControllerManagerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// Instantiate menu controller
+	/*
 	menuControllerComponent = NewObject<UMenuControllerComponent>(this, UMenuControllerComponent::StaticClass());
 	menuControllerComponent->RegisterComponent();
 	menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	
+	*/
 }
 
 
@@ -38,14 +39,20 @@ void UPlayerControllerManagerComponent::TickComponent(float DeltaTime, ELevelTic
 
 void UPlayerControllerManagerComponent::PressTrigger()
 {
-	// TODO: Call the active controller component's trigger method
+	// Each controller component class should override this method.
+	currentControllerComponent->PressTrigger();
 }
 
 void UPlayerControllerManagerComponent::PressGrip()
 {
-
+	// Each controller component class should override this method.
+	currentControllerComponent->PressGrip();
 }
 
+// Sets the controller manager into menu mode or returns from menu mode
+// TODO Currently, when menu mode is false the controller is returned to the held object state.
+// If other states are to be implemented IE Force powers, blasters, then 'false' should return the controller
+// manager to whichever state is appropriate.
 void UPlayerControllerManagerComponent::SetMenuMode(bool isMenu)
 {
 	// Deactivate components

@@ -4,7 +4,6 @@
 
 #include "Components/SceneComponent.h"
 #include "PlayerControllerComponent.h"
-#include "MenuControllerComponent.h"
 #include "PlayerControllerManagerComponent.generated.h"
 
 
@@ -31,9 +30,12 @@ public:
 
 	// Called to pause the game
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void SetMenuMode(bool isMenu);
+	
+	// Expose this component to blueprints to be assigned
+	// This component must be assigned in Blueprints. It also should have a subcomponent, a WidgetInteractionComponent, that must be assigned to it.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller Components") UPlayerControllerComponent *menuControllerComponent;
 
 private:
-	UPROPERTY() UPlayerControllerComponent *menuControllerComponent;
 	UPROPERTY() UPlayerControllerComponent *heldObjectControllerComponent;
 	UPROPERTY() UPlayerControllerComponent *currentControllerComponent;
 };
