@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "JediTrainer.h"
+#include "LightsaberControllerComponent.h"
 #include "PlayerControllerManagerComponent.h"
 
 
@@ -26,6 +27,11 @@ void UPlayerControllerManagerComponent::BeginPlay()
 	menuControllerComponent->RegisterComponent();
 	menuControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 	*/
+
+	// Instantiate lightsaber controller
+	heldObjectControllerComponent = NewObject<ULightsaberControllerComponent>(this, ULightsaberControllerComponent::StaticClass());
+	heldObjectControllerComponent->RegisterComponent();
+	heldObjectControllerComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 }
 
 
@@ -40,13 +46,15 @@ void UPlayerControllerManagerComponent::TickComponent(float DeltaTime, ELevelTic
 void UPlayerControllerManagerComponent::PressTrigger()
 {
 	// Each controller component class should override this method.
-	currentControllerComponent->PressTrigger();
+	// Perform a null check to ensure currentControllerComponent is not null
+	if (currentControllerComponent)currentControllerComponent->PressTrigger();
 }
 
 void UPlayerControllerManagerComponent::PressGrip()
 {
 	// Each controller component class should override this method.
-	currentControllerComponent->PressGrip();
+	// Perform a null check to ensure currentControllerComponent is not null
+	if(currentControllerComponent) currentControllerComponent->PressGrip();
 }
 
 // Sets the controller manager into menu mode or returns from menu mode
@@ -56,8 +64,9 @@ void UPlayerControllerManagerComponent::PressGrip()
 void UPlayerControllerManagerComponent::SetMenuMode(bool isMenu)
 {
 	// Deactivate components
-	menuControllerComponent->SetActiveControllerComponent(false);
-	heldObjectControllerComponent->SetActiveControllerComponent(false);
+	// Check to see if they are null before calling this - they should not be null
+	if(menuControllerComponent) menuControllerComponent->SetActiveControllerComponent(false);
+	if (heldObjectControllerComponent) heldObjectControllerComponent->SetActiveControllerComponent(false);
 
 	// Select new active component
 	if (isMenu) 
@@ -75,6 +84,6 @@ void UPlayerControllerManagerComponent::SetMenuMode(bool isMenu)
 	}
 
 	// Activate the controller component
-	currentControllerComponent->SetActiveControllerComponent(true);
+	if(currentControllerComponent) currentControllerComponent->SetActiveControllerComponent(true);
 }
 

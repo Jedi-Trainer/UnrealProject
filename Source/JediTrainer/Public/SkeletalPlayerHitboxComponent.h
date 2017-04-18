@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent)) class JEDITRAINER_API USkeletalPlayerHitboxComponent : public UPlayerHitboxComponent {
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Config=Game) class JEDITRAINER_API USkeletalPlayerHitboxComponent : public UPlayerHitboxComponent {
 	GENERATED_BODY()
 	
 public:
@@ -27,21 +27,21 @@ protected:
 
 private:
 	// TODO Parameterize these constants
-	const float HEAD_SCALE_X = 0.25;
-	const float HEAD_SCALE_Y = 0.25;
-	const float HEAD_SCALE_Z = 0.25;
-	const float CHEST_SCALE_X = 0.35;
-	const float CHEST_SCALE_Y = 0.35;
-	const float CHEST_SCALE_Z = 0.25;
-	const float ABDOMEN_SCALE_X = 0.35;
-	const float ABDOMEN_SCALE_Y = 0.35;
-	const float ABDOMEN_SCALE_Z = 0.25;
-	const float PELVIS_SCALE_X = 0.35;
-	const float PELVIS_SCALE_Y = 0.35;
-	const float PELVIS_SCALE_Z = 0.25;
-	const float CHEST_OFFSET = -25;
-	const float ABDOMEN_OFFSET = -50;
-	const float PELVIS_OFFSET = -75;
+	const float HeadScaleX = 0.25;
+	const float HeadScaleY = 0.25;
+	const float HeadScaleZ = 0.25;
+	const float ChestScaleX = 0.35;
+	const float ChestScaleY = 0.35;
+	const float ChestScaleZ = 0.25;
+	const float AbdomenScaleX = 0.35;
+	const float AbdomenScaleY = 0.35;
+	const float AbdomenScaleZ = 0.25;
+	const float PelvisScaleX = 0.35;
+	const float PelvisScaleY = 0.35;
+	const float PelvisScaleZ = 0.25;
+	const float ChestOffset = -25;
+	const float AbdomenOffset = -50;
+	const float PelvisOffset = -75;
 
 	UPROPERTY() UCylinderComponent* headComponent;
 	UPROPERTY() UCylinderComponent* chestComponent;

@@ -41,7 +41,7 @@ private:
 	// Constant representing the beginning health the player should have
 	// TODO Consider parameterizing this field so that it can be modified outside of the game mode
 	// TODO Should this be accessed through the game instance?
-	const int STARTING_HEALTH = 25;
+	const int STARTING_HEALTH = 5;
 	const float SCALE_FACTOR = 1.5;
 	const float VERTICAL_OFFSET = -30;
 

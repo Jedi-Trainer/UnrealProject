@@ -11,7 +11,7 @@ void USkeletalPlayerHitboxComponent::initHitboxCollider(){
 	headComponent = NewObject<UCylinderComponent>(this, UCylinderComponent::StaticClass());
 	headComponent->RegisterComponent();
 	headComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	headComponent->SetScale(HEAD_SCALE_X, HEAD_SCALE_Y, HEAD_SCALE_Z);
+	headComponent->SetScale(HeadScaleX, HeadScaleY, HeadScaleZ);
 	headComponent->SetVisible(isVisibleDebug);
 
 	chestComponent = NewObject<UCylinderComponent>(this, UCylinderComponent::StaticClass());
@@ -40,9 +40,9 @@ void USkeletalPlayerHitboxComponent::initHitboxCollider(){
 	pelvisMesh->OnComponentHit.AddDynamic(this, &USkeletalPlayerHitboxComponent::onHit);
 
 	// Initialize transforms
-	chestTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, CHEST_OFFSET), FVector(CHEST_SCALE_X, CHEST_SCALE_Y, CHEST_SCALE_Z));
-	abdomenTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, ABDOMEN_OFFSET), FVector(ABDOMEN_SCALE_X, ABDOMEN_SCALE_Y, ABDOMEN_SCALE_Z));
-	pelvisTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, PELVIS_OFFSET), FVector(PELVIS_SCALE_X, PELVIS_SCALE_Y, PELVIS_SCALE_Z));
+	chestTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, ChestOffset), FVector(ChestScaleX, ChestScaleY, ChestScaleZ));
+	abdomenTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, AbdomenOffset), FVector(AbdomenScaleX, AbdomenScaleY, AbdomenScaleZ));
+	pelvisTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, PelvisOffset), FVector(PelvisScaleX, PelvisScaleY, PelvisScaleZ));
 }
 
 // Called every frame
@@ -57,18 +57,18 @@ void USkeletalPlayerHitboxComponent::TickComponent(float DeltaTime, ELevelTick T
 
 	chestTransform = FTransform(
 		FMath::Lerp(chestTransform.Rotator(), GetComponentRotation(), 0.5),
-		FMath::Lerp(chestTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, CHEST_OFFSET), 0.5),
-		FVector(CHEST_SCALE_X, CHEST_SCALE_Y, CHEST_SCALE_Z));
+		FMath::Lerp(chestTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, ChestOffset), 0.5),
+		FVector(ChestScaleX, ChestScaleY, ChestScaleZ));
 
 	abdomenTransform = FTransform(
 		FMath::Lerp(chestTransform.Rotator(), pelvisTransform.Rotator(), 0.5),
 		FMath::Lerp(chestTransform.GetTranslation(), pelvisTransform.GetTranslation(), 0.5),
-		FVector(ABDOMEN_SCALE_X, ABDOMEN_SCALE_Y, ABDOMEN_SCALE_Z));
+		FVector(AbdomenScaleX, AbdomenScaleY, AbdomenScaleZ));
 
 	pelvisTransform = FTransform(
 		FRotator(0, 0, 0),
-		FMath::Lerp(pelvisTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, PELVIS_OFFSET), 0.1),
-		FVector(PELVIS_SCALE_X, PELVIS_SCALE_Y, PELVIS_SCALE_Z));
+		FMath::Lerp(pelvisTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, PelvisOffset), 0.1),
+		FVector(PelvisScaleX, PelvisScaleY, PelvisScaleZ));
 
 }
 
