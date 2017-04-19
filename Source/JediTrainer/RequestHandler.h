@@ -41,7 +41,7 @@ public:
 	*/
 
 	//The actual HTTP call 
-	UFUNCTION() void sendScore();
+	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void SendScore(int playerScore, FString username, FString difficultyName);
 
 	// TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores(int playerScore);

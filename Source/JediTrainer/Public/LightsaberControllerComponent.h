@@ -16,18 +16,37 @@ class JEDITRAINER_API ULightsaberControllerComponent : public UPlayerControllerC
 	// TODO Add assets
 	// TODO Override onTick()
 
+public:
+	ULightsaberControllerComponent();
+
 protected:
 	void onTriggerPressed() override;
 	void onGripPressed() override;
 	void onActiveControllerSet(bool isActive) override;
 
 private:
+	// Assets
+	UPROPERTY() UStaticMesh* bladeMesh;
+	UPROPERTY() UStaticMesh* hiltMesh;
+	UPROPERTY() UMaterial* bladeMaterialBlue;
+	UPROPERTY() UMaterial* bladeMaterialGreen;
+	UPROPERTY() UMaterial* bladeMaterialRed;
+	UPROPERTY() UMaterial* bladeMaterialPurple;
+
+	// Constants
+	// TODO Make config file
 	const FVector START_SCALE = FVector(0.0, 0.0, 0.0);
 	const FVector END_SCALE = FVector(0.03, 0.03, 1.0);
-
-
 	const float BLADE_LERP_RATE = 0.05; // Constant representing the scale of the interpolation rate.
+	const char* bladeMeshAssetPath = "/Game/StarterContent/Shapes/Shape_Cylinder.Shape_Cylinder";
+	const char* bladeTextureAssetPath_Blue = "/Game/Materials/Lightsaber2.Lightsaber2";
+	const char* bladeTextureAssetPath_Green = "/Game/Materials/Lightsaber_ROJ.Lightsaber_ROJ";
+	const char* bladeTextureAssetPath_Red = "/Game/Materials/Lightsaber_Vader.Lightsaber_Vader";
+	const char* bladeTextureAssetPath_Purple = "/Game/Materials/Lightsaber_Windu.Lightsaber_Windu";
+	const char* hiltMeshAssetPath = "/Game/Models/saber_model.saber_model";
+	// const FString hiltTextAssetPath;
 
+	// Properties
 	UPROPERTY() bool isLightsaberActive;
 	UPROPERTY() bool isDead; // TODO Is this property redundant? Consult Blueprints prototype
 

@@ -30,13 +30,12 @@ void ARequestHandler::BeginPlay()
 
 //This will actually send the score up to our database
 //Need these parameters: name, score, difficulty
-void ARequestHandler::sendScore() {
+void ARequestHandler::SendScore(int playerScore, FString username, FString difficultyName) {
 	//Create the JSON object
 	TSharedPtr<FJsonObject> json = MakeShareable(new FJsonObject);
-	json->SetStringField("id", "54");
-	json->SetStringField("name", "Mikey DAT BOI");
-	json->SetStringField("score", "88");
-	json->SetStringField("difficulty", "Padawan");
+	json->SetStringField("name", username);
+	json->SetNumberField("score", playerScore);
+	json->SetStringField("difficulty", difficultyName);
 
 
 	//This serializes the JSON into a String that you can pass to an HTTP request.

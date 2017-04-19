@@ -51,7 +51,6 @@ void UPlayerHitboxComponent::TickComponent( float DeltaTime, ELevelTick TickType
 
 	// If the player is not dead, update the alpha value of the UI Hit Display material. 
 	// This is so it gradually fades out after you are hit.
-	if (health > 0) {
 		if (uIHitAlphaVal > 0.0) {
 			uIHitAlphaVal -= 0.03;
 			// Why on Earth does this log produce and access violation?
@@ -73,8 +72,6 @@ void UPlayerHitboxComponent::TickComponent( float DeltaTime, ELevelTick TickType
 		
 			//}
 		}
-
-	}
 }
 
 int UPlayerHitboxComponent::GetHealth()
@@ -126,9 +123,9 @@ void UPlayerHitboxComponent::initHitboxCollider() {
 void UPlayerHitboxComponent::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox has been hit."));
-	// Only take damage if the hit display is at less than 25% opacity.
+	// Only take damage if the hit display is at less than 50% opacity.
 	// This is so that the player never takes damage while the hit indicator is still visible.
-	if (uIHitAlphaVal < 0.25)
+	if (uIHitAlphaVal < 0.5)
 	{
 		health -= 1;
 		displayHit();
