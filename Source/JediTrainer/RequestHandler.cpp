@@ -55,12 +55,23 @@ void ARequestHandler::SendScore(int playerScore, FString username, FString diffi
 
 }
 
-//Get the top 10 all-time scores
-void ARequestHandler::GetScoresTop10(int playerScore) {
+// Get the top 10 all-time scores
+// TODO Refactor out duplicated code between the different route methods and turn it into a private method
+// called by each of them. Only the route is required as a parameter.
+void ARequestHandler::GetScoresTop10(int playerScore, bool isSubmitted) {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/top10/" + FString::FromInt(playerScore));
+	FString route;
+	if (isSubmitted) {
+		route = "http://jeditrainer.herokuapp.com/submit/top10/";
+	}
+	else {
+		route = "http://jeditrainer.herokuapp.com/top10/";
+	}
+	Request->SetURL(route + FString::FromInt(playerScore));
+	
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
@@ -72,11 +83,22 @@ void ARequestHandler::GetScoresTop10(int playerScore) {
 }
 
 //Get the bottom 10 scores
-void ARequestHandler::GetScoresBottom10(int playerScore) {
+// TODO Refactor out duplicated code between the different route methods and turn it into a private method
+// called by each of them. Only the route is required as a parameter.
+void ARequestHandler::GetScoresBottom10(int playerScore, bool isSubmitted) {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/bottom10/" + FString::FromInt(playerScore));
+	FString route;
+	if (isSubmitted) {
+		route = "http://jeditrainer.herokuapp.com/submit/bottom10/";
+	}
+	else {
+		route = "http://jeditrainer.herokuapp.com/bottom10/";
+	}
+	Request->SetURL(route + FString::FromInt(playerScore));
+	
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
@@ -87,11 +109,24 @@ void ARequestHandler::GetScoresBottom10(int playerScore) {
 	}
 }
 
-void ARequestHandler::GetScores(int playerScore) {	
+// TODO Document this method
+// TODO Rename to GetNearby
+// TODO Refactor out duplicated code between the different route methods and turn it into a private method
+// called by each of them. Only the route is required as a parameter.
+void ARequestHandler::GetScores(int playerScore, bool isSubmitted) {	
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ARequestHandler::OnResponseReceived);
+	
 	//This is the url on which to process the request
-	Request->SetURL("http://jeditrainer.herokuapp.com/nearby/" + FString::FromInt(playerScore));
+	FString route;
+	if (isSubmitted) {
+		route = "http://jeditrainer.herokuapp.com/submit/nearby/";
+	}
+	else {
+		route = "http://jeditrainer.herokuapp.com/nearby/";
+	}
+	Request->SetURL(route + FString::FromInt(playerScore));
+	
 	Request->SetVerb("GET");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	if (Request->ProcessRequest()) {
