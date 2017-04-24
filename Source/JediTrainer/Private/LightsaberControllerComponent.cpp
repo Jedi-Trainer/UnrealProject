@@ -32,6 +32,17 @@ ULightsaberControllerComponent::ULightsaberControllerComponent()
 		UE_LOG(TraceLog, Warning, TEXT("WARNING: Hilt mesh could not be loaded."));
 	}
 
+	ConstructorHelpers::FObjectFinder<UMaterial> LightsaberHiltTextureAsset(ANSI_TO_TCHAR(hiltMaterialAssetPath));
+	if (LightsaberHiltTextureAsset.Succeeded())
+	{
+		this->hiltMaterial = LightsaberHiltTextureAsset.Object;
+		UE_LOG(TraceLog, Warning, TEXT("TRACE: Hilt material loaded."));
+	}
+	else
+	{
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Blue blade material could not be loaded."));
+	}
+
 	ConstructorHelpers::FObjectFinder<UMaterial> BlueBladeTextureAsset(ANSI_TO_TCHAR(bladeTextureAssetPath_Blue));
 	if (BlueBladeTextureAsset.Succeeded())
 	{
@@ -74,6 +85,49 @@ ULightsaberControllerComponent::ULightsaberControllerComponent()
 	else
 	{
 		UE_LOG(TraceLog, Warning, TEXT("WARNING: Purple blade material could not be loaded."));
+	}
+}
+
+void ULightsaberControllerComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing lightsaber hilt."));
+	hiltComponent = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
+	hiltComponent->RegisterComponent();
+	hiltComponent->SetStaticMesh(hiltMesh);
+	hiltComponent->SetVisibility(true);
+	hiltComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	hiltComponent->SetCastShadow(true);
+	hiltComponent->SetWorldTransform(FTransform(HiltRotation, HiltLocation, HiltScale));
+	
+	hiltComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+
+	if (hiltMaterial != NULL) {
+		hiltComponent->SetMaterial(0, hiltMaterial);
+		UE_LOG(TraceLog, Warning, TEXT("TRACE: Lightsaber hilt material set."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Lightsaber hilt material is null."));
+	}
+
+	UE_LOG(TraceLog, Warning, TEXT("TRACE: Initializing lightsaber blade."));
+	bladeComponent = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass());
+	bladeComponent->RegisterComponent();
+	bladeComponent->SetStaticMesh(bladeMesh);
+	bladeComponent->SetVisibility(true);
+	bladeComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	bladeComponent->SetCastShadow(false);
+	bladeComponent->SetWorldTransform(FTransform(BladeRotation, BladeLocation, BladeScale));
+
+	bladeComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+
+	if (bladeMaterialBlue != NULL) {
+		bladeComponent->SetMaterial(0, bladeMaterialBlue);
+		UE_LOG(TraceLog, Warning, TEXT("TRACE: Lightsaber blade material set."));
+	}
+	else {
+		UE_LOG(TraceLog, Warning, TEXT("WARNING: Lightsaber blade material is null."));
 	}
 }
 

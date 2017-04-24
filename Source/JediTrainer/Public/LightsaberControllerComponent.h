@@ -19,15 +19,22 @@ class JEDITRAINER_API ULightsaberControllerComponent : public UPlayerControllerC
 public:
 	ULightsaberControllerComponent();
 
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
 protected:
 	void onTriggerPressed() override;
 	void onGripPressed() override;
 	void onActiveControllerSet(bool isActive) override;
 
 private:
+	UPROPERTY() UStaticMeshComponent* bladeComponent;
+	UPROPERTY() UStaticMeshComponent* hiltComponent;
+
 	// Assets
 	UPROPERTY() UStaticMesh* bladeMesh;
 	UPROPERTY() UStaticMesh* hiltMesh;
+	UPROPERTY() UMaterial* hiltMaterial;
 	UPROPERTY() UMaterial* bladeMaterialBlue;
 	UPROPERTY() UMaterial* bladeMaterialGreen;
 	UPROPERTY() UMaterial* bladeMaterialRed;
@@ -38,12 +45,20 @@ private:
 	const FVector START_SCALE = FVector(0.0, 0.0, 0.0);
 	const FVector END_SCALE = FVector(0.03, 0.03, 1.0);
 	const float BLADE_LERP_RATE = 0.05; // Constant representing the scale of the interpolation rate.
+	// const FVector HiltLocation = FVector(-0.5, -7.6, 17.0);
+	const FVector HiltLocation = FVector(0, 0, 0);
+	const FRotator HiltRotation = FRotator(270, -90.0, 0);
+	const FVector HiltScale = FVector(0.04, 0.04, 0.04);
+	const FVector BladeLocation = FVector(0.0, 0.0, 27.0);
+	const FRotator BladeRotation = FRotator(0.0, 0.0, 0.0);
+	const FVector BladeScale = END_SCALE;
 	const char* bladeMeshAssetPath = "/Game/StarterContent/Shapes/Shape_Cylinder.Shape_Cylinder";
 	const char* bladeTextureAssetPath_Blue = "/Game/Materials/Lightsaber2.Lightsaber2";
 	const char* bladeTextureAssetPath_Green = "/Game/Materials/Lightsaber_ROJ.Lightsaber_ROJ";
 	const char* bladeTextureAssetPath_Red = "/Game/Materials/Lightsaber_Vader.Lightsaber_Vader";
 	const char* bladeTextureAssetPath_Purple = "/Game/Materials/Lightsaber_Windu.Lightsaber_Windu";
 	const char* hiltMeshAssetPath = "/Game/Models/saber_model.saber_model";
+	const char* hiltMaterialAssetPath = "/Game/Materials/LightsaberHiltMaterial.LightsaberHiltMaterial";
 	// const FString hiltTextAssetPath;
 
 	// Properties
