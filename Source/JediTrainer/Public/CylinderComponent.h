@@ -5,7 +5,11 @@
 #include "Components/SceneComponent.h"
 #include "CylinderComponent.generated.h"
 
-
+/**
+ * https://github.com/Jedi-Trainer/UnrealProject/wiki/CylinderComponent
+ * CylinderComponent models an untextured cylinder with collisions. It provides a method, GetRandomPoint() that will return a random point on the cylinder.
+ * This class was written for the skeletal hitbox player collision system. (See: SkeletalPlayerHitboxComponent)
+ */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JEDITRAINER_API UCylinderComponent : public USceneComponent
 {

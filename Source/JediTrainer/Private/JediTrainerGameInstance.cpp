@@ -6,7 +6,7 @@
 UJediTrainerGameInstance::UJediTrainerGameInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	// Default color index
-	LightSaberColorIndex = 0;
+	LightSaberColorIndex = 3;
 
 	// Lowest difficulty
 	Difficulty = 0;

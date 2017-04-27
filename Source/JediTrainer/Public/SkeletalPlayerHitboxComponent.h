@@ -27,9 +27,9 @@ protected:
 
 private:
 	// TODO Parameterize these constants
-	const float HeadScaleX = 0.25;
-	const float HeadScaleY = 0.25;
-	const float HeadScaleZ = 0.25;
+	const float HeadScaleX = 0.20;
+	const float HeadScaleY = 0.20;
+	const float HeadScaleZ = 0.20;
 	const float ChestScaleX = 0.35;
 	const float ChestScaleY = 0.35;
 	const float ChestScaleZ = 0.25;
@@ -48,6 +48,7 @@ private:
 	UPROPERTY() UCylinderComponent* abdomenComponent;
 	UPROPERTY() UCylinderComponent* pelvisComponent;
 
+	UPROPERTY() FTransform headTransform;
 	UPROPERTY() FTransform chestTransform;
 	UPROPERTY() FTransform abdomenTransform;
 	UPROPERTY() FTransform pelvisTransform;

@@ -11,7 +11,7 @@ void USkeletalPlayerHitboxComponent::initHitboxCollider(){
 	headComponent = NewObject<UCylinderComponent>(this, UCylinderComponent::StaticClass());
 	headComponent->RegisterComponent();
 	headComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	headComponent->SetScale(HeadScaleX, HeadScaleY, HeadScaleZ);
+	// headComponent->SetWorldScale3D(FVector(HeadScaleX, HeadScaleY, HeadScaleZ));
 	headComponent->SetVisible(isVisibleDebug);
 
 	chestComponent = NewObject<UCylinderComponent>(this, UCylinderComponent::StaticClass());
@@ -40,6 +40,10 @@ void USkeletalPlayerHitboxComponent::initHitboxCollider(){
 	pelvisMesh->OnComponentHit.AddDynamic(this, &USkeletalPlayerHitboxComponent::onHit);
 
 	// Initialize transforms
+	headTransform = FTransform(
+		GetComponentRotation(),
+		GetComponentLocation(),
+		FVector(HeadScaleX, HeadScaleY, HeadScaleZ));
 	chestTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, ChestOffset), FVector(ChestScaleX, ChestScaleY, ChestScaleZ));
 	abdomenTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, AbdomenOffset), FVector(AbdomenScaleX, AbdomenScaleY, AbdomenScaleZ));
 	pelvisTransform = FTransform(GetComponentRotation(), GetComponentLocation() + FVector(0, 0, PelvisOffset), FVector(PelvisScaleX, PelvisScaleY, PelvisScaleZ));
@@ -51,13 +55,19 @@ void USkeletalPlayerHitboxComponent::TickComponent(float DeltaTime, ELevelTick T
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Apply transforms
-	if(chestComponent) chestComponent->SetWorldTransform(chestTransform);
-	if(abdomenComponent) abdomenComponent->SetWorldTransform(abdomenTransform);
-	if(pelvisComponent) pelvisComponent->SetWorldTransform(pelvisTransform);
+	if (headComponent) headComponent->SetWorldTransform(headTransform);
+	if (chestComponent) chestComponent->SetWorldTransform(chestTransform);
+	if (abdomenComponent) abdomenComponent->SetWorldTransform(abdomenTransform);
+	if (pelvisComponent) pelvisComponent->SetWorldTransform(pelvisTransform);
+
+	headTransform = FTransform(
+		GetComponentRotation(),
+		GetComponentLocation(),
+		FVector(HeadScaleX, HeadScaleY, HeadScaleZ));
 
 	chestTransform = FTransform(
-		FMath::Lerp(chestTransform.Rotator(), GetComponentRotation(), 0.5),
-		FMath::Lerp(chestTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, ChestOffset), 0.5),
+		FMath::Lerp(chestTransform.Rotator(), headTransform.Rotator(), 0.5),
+		FMath::Lerp(chestTransform.GetTranslation(), headTransform.GetTranslation() + FVector(0, 0, ChestOffset), 0.5),
 		FVector(ChestScaleX, ChestScaleY, ChestScaleZ));
 
 	abdomenTransform = FTransform(
@@ -67,7 +77,7 @@ void USkeletalPlayerHitboxComponent::TickComponent(float DeltaTime, ELevelTick T
 
 	pelvisTransform = FTransform(
 		FRotator(0, 0, 0),
-		FMath::Lerp(pelvisTransform.GetTranslation(), GetComponentLocation() + FVector(0, 0, PelvisOffset), 0.1),
+		FMath::Lerp(pelvisTransform.GetTranslation(), headTransform.GetTranslation() + FVector(0, 0, PelvisOffset), 0.1),
 		FVector(PelvisScaleX, PelvisScaleY, PelvisScaleZ));
 
 }

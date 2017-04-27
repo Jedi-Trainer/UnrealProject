@@ -7,7 +7,11 @@
 #include "UnrealString.h"
 #include "RequestHandler.generated.h"
 
-
+/**
+ * RequestHandler
+ * https://github.com/Jedi-Trainer/UnrealProject/wiki/RequestHandler
+ * RequestHandler communicates with the remote Jedi Trainer web server and stores information for the game's leaderboard, including the currently viewed scores and rank of the player on the current leaderboard. 
+ */
 
 UCLASS()
 class JEDITRAINER_API ARequestHandler : public AActor
@@ -40,23 +44,40 @@ public:
 	This is the most flexible option.
 	*/
 
-	//The actual HTTP call 
+	/** Sends a new score to the web server to be added to the leaderboard. Can be called from blueprints. The data is determined by the server when it receives the score record. */
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void SendScore(int playerScore, FString username, FString difficultyName);
 
-	// TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
+	/**
+	 * Query the web server to get the four scores above the player's score and the five scores below the player's score from the web server. 
+	 * It is important to understand that this method only executes a GET request to the server and stores the results inside the RequestHandler; it does not
+	 * return the scores because it is asynchronous. Can be called from blueprints. The parameter "isSubmitted" specifies whether or not the player's score has
+	 * been submitted to the database; if the player's score is not already in the database, it should still be included in the results.
+	 * TODO: Rename GetScores() and GetScoreRecords() to be more intuitive. GetScores currently executes a GET request while GetScoreRecords is an accessor.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScores(UPARAM(DisplayName = "Player Score") int playerScore, UPARAM(DisplayName = "Is Submitted") bool isSubmitted);
 
+	/**
+	 * Query the top ten scores from the web server, including the player's new score if they are in the top ten and have not saved their score yet. Otherwise similar to GetScores().
+	 */ 
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresTop10(UPARAM(DisplayName = "Player Score") int playerScore, UPARAM(DisplayName = "Is Submitted") bool isSubmitted);
 
+	/**
+	 * Query the bottom ten scores from the web server, including the player's new score if they are in the bottom ten and have not saved their score yet. Otherwise similar to GetScores().
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") void GetScoresBottom10(UPARAM(DisplayName = "Player Score") int playerScore, UPARAM(DisplayName = "Is Submitted") bool isSubmitted);
 
+	/**
+	 * Access the score records received from the database. This method returns a TArray of FString objects containing the score records for a leaderboard. It is important to understand that this method is asynchronous
+	 * and will return an empty list if it is accessed before the server responds to a request. This accessor is useful in a user defined event handler for ReceivedScoresEvent.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") TArray<FString> GetScoreRecords();
 
+	/**
+	 * Access the player's score index received from the database. This method returns an integer representing the player's standing in the current list of scores. Similar to GetScoreRecords() in all other respects.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Switch Functions") int GetPlayerScoreIndex();
 
-	//DECLARE_EVENT(ARequestHandler, FOnReceivedScoreRecords)
-	//FOnReceivedScoreRecords& OnReceivedScoreRecords() { return ReceivedScoreRecordsEvent; }
-
+	// An event handler that is called when scores are received from the database after internal logic. It can be bound by the containing class or blueprint.
 	UPROPERTY(BlueprintAssignable, Category = "Events") FOnReceivedScoreRecords ReceivedScoreRecordsEvent;
 
 	//Assign this function to call when the request processes successfully
