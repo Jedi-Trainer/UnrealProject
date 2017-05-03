@@ -5,7 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "PlayerHitboxComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( config=(HitboxSettings), ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JEDITRAINER_API UPlayerHitboxComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -41,8 +41,11 @@ private:
 	// Constant representing the beginning health the player should have
 	// TODO Consider parameterizing this field so that it can be modified outside of the game mode
 	// TODO Should this be accessed through the game instance?
-	const int STARTING_HEALTH = 25;
-	const float SCALE_FACTOR = 1.5;
+	// You have to close and reopen the editor each time you make a change to one of the config files. 
+	// https://answers.unrealengine.com/questions/162576/how-to-reload-config-if-editor-is-already-open.html
+	// https://answers.unrealengine.com/questions/275882/how-to-reload-config-files-modified-in-the-editor.html
+	const int STARTING_HEALTH = 20;
+	const float SCALE_FACTOR = -1.5f;
 	const float VERTICAL_OFFSET = -30;
 
 

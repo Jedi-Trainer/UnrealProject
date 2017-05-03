@@ -39,6 +39,8 @@ void UPlayerHitboxComponent::BeginPlay()
 	initHitDisplay();
 	initHitboxCollider();
 
+//	UE_LOG(TraceLog, Warning, TEXT("TRACE: Starting health is: %f"), health);
+
 	// ...
 	
 }
