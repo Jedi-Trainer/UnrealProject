@@ -5,7 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "PlayerHitboxComponent.generated.h"
 
-UCLASS( config=(HitboxSettings), ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( Config=PlayerHitboxSettings, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JEDITRAINER_API UPlayerHitboxComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -36,7 +36,6 @@ protected:
 	// Function to be called upon collision with another object.
 	UFUNCTION() void onHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-
 private:
 	// Constant representing the beginning health the player should have
 	// TODO Consider parameterizing this field so that it can be modified outside of the game mode
@@ -44,10 +43,9 @@ private:
 	// You have to close and reopen the editor each time you make a change to one of the config files. 
 	// https://answers.unrealengine.com/questions/162576/how-to-reload-config-if-editor-is-already-open.html
 	// https://answers.unrealengine.com/questions/275882/how-to-reload-config-files-modified-in-the-editor.html
-	const int STARTING_HEALTH = 20;
+	const int STARTING_HEALTH = 10;
 	const float SCALE_FACTOR = -1.5f;
 	const float VERTICAL_OFFSET = -30;
-
 
 	// Store health variable
 	UPROPERTY() int health;

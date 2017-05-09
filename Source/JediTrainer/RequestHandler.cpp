@@ -174,7 +174,8 @@ void ARequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponseP
 				TSharedPtr<FJsonObject> object = jsonArray[i]->AsObject();
 				FString name = object->GetStringField("name");
 				int score = object->GetIntegerField("score");
-				FString scoreRecord = name + "\t-\t" + FString::FromInt(score);
+				FString date = object->GetStringField("date");
+				FString scoreRecord = name + " \t\t  " + FString::FromInt(score) + "  \t\t " + date;
 				this->scoreRecords.Emplace(scoreRecord);
 				UE_LOG(TraceLog, Warning, TEXT("Value emplaced."));
 			}

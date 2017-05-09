@@ -9,9 +9,8 @@
 /**
  * 
  */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Config=Game) class JEDITRAINER_API USkeletalPlayerHitboxComponent : public UPlayerHitboxComponent {
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Blueprintable, Config=Game) class JEDITRAINER_API USkeletalPlayerHitboxComponent : public UPlayerHitboxComponent {
 	GENERATED_BODY()
-	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

@@ -24,6 +24,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Configuration")
 		int32 Difficulty;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Configuration")
+		FName currentLevel;
 	
 };

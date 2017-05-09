@@ -10,6 +10,9 @@ UJediTrainerGameInstance::UJediTrainerGameInstance(const FObjectInitializer& Obj
 
 	// Lowest difficulty
 	Difficulty = 0;
+
+	// Default level
+	currentLevel = TEXT("Tatooine");
 }
 
 

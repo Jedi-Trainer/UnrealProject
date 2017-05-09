@@ -39,7 +39,7 @@ void UPlayerHitboxComponent::BeginPlay()
 	initHitDisplay();
 	initHitboxCollider();
 
-//	UE_LOG(TraceLog, Warning, TEXT("TRACE: Starting health is: %f"), health);
+//	UE_LOG(TraceLog, Warning, TEXT("TRACE: Starting health is: %d"), health);
 
 	// ...
 	
@@ -124,6 +124,12 @@ void UPlayerHitboxComponent::initHitboxCollider() {
 
 void UPlayerHitboxComponent::onHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
+	// Destroy other actor
+	// TODO Cast to projectile and only destroy the other actor if it is a projectile
+	// WARNING: Extremely dangerous.
+	OtherActor->Destroy();
+
+
 	UE_LOG(TraceLog, Warning, TEXT("TRACE: Hitbox has been hit."));
 	// Only take damage if the hit display is at less than 50% opacity.
 	// This is so that the player never takes damage while the hit indicator is still visible.
